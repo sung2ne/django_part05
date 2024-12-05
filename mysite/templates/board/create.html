@@ -1,0 +1,105 @@
+{% extends "../base.html" %}
+
+{% block style %}{% endblock %}
+
+{% block title %}게시글 등록{% endblock %}
+
+{% block content %}
+<!-- 게시글 등록 -->
+<div class="card">
+    <div class="card-body">
+        <form id="createForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" id="title" name="title" class="form-control" placeholder="제목을 입력하세요." value="{{ form.title.value|default_if_none:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">내용</label>
+                <textarea rows="10" id="content" name="content" class="form-control" placeholder="내용을 입력하세요.">{{ form.content.value|default_if_none:'' }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">글쓴이</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="글쓴이를 입력하세요." value="{{ form.username.value|default_if_none:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="passwd" class="form-label">비밀번호</label>
+                <input type="password" id="passwd" name="passwd" class="form-control" placeholder="비밀번호를 입력하세요.">
+            </div>
+            <div class="mb-3">
+                <label for="uploadFile" class="form-label">첨부 파일</label>
+                <input type="file" class="form-control" id="uploadFile" name="uploadFile" accept="*/*">
+                <small class="form-text text-muted">파일 크기는 10MB 이하만 가능합니다.</small>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">게시글 등록</button>
+                <a href="{% url 'board:list' %}" class="btn btn-danger">등록 취소</a>
+            </div>
+        </form>
+    </div>
+</div>
+<!--// 게시글 등록 -->
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        // 게시글 폼 검증
+        $('#createForm').validate({
+            rules: {
+                title: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 100
+                },
+                content: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 1000
+                },
+                username: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 10
+                },
+                passwd: {
+                    required: true,
+                    minlength: 4,
+                    maxlength: 20
+                }
+            },
+            messages: {
+                title: {
+                    required: '제목을 입력하세요.',
+                    minlength: '제목은 최소 2자 이상 입력하세요.',
+                    maxlength: '제목은 최대 100자 이하로 입력하세요.'
+                },
+                content: {
+                    required: '내용을 입력하세요.',
+                    minlength: '내용은 최소 2자 이상 입력하세요.',
+                    maxlength: '내용은 최대 1000자 이하로 입력하세요.'
+                },
+                username: {
+                    required: '작성자를 입력하세요.',
+                    minlength: '작성자는 최소 2자 이상 입력하세요.',
+                    maxlength: '작성자는 최대 10자 이하로 입력하세요.'
+                },
+                passwd: {
+                    required: '비밀번호를 입력하세요.',
+                    minlength: '비밀번호는 최소 4자 이상 입력하세요.',
+                    maxlength: '비밀번호는 최대 20자 이하로 입력하세요.'
+                }
+            },
+            errorClass: 'is-invalid',
+            validClass: 'is-valid',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.mb-3').append(error);
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}
