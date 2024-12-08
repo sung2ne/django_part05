@@ -21,7 +21,7 @@
     </tr>
     <tr>
         <th class="text-center col-2">내용</th>
-        <td class="col-10">{{ boardVo.content | linebreaksbr }}</td>
+        <td class="col-10">{{ boardVo.content | safe_html }}</td>
     </tr>
     {% if board.filename %}
         <tr>

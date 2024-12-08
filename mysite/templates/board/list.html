@@ -74,7 +74,7 @@
 
             <!-- 페이지 리스트 -->
             {% for page_number in boards.paginator.page_range %}
-                {% if page_number >= boards.number|minus:5 and page_number <= boards.number|add:5 %}
+                {% if page_number >= boards.number|add:-5 and page_number <= boards.number|add:5 %}
                     <li class="page-item {% if page_number == boards.number %}active{% endif %}">
                         <a class="page-link" href="{% url 'board:list' %}?page={{ page_number }}">
                             {{ page_number }}
