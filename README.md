@@ -2,4 +2,4 @@
 
 ## PART 05. 게시글 등록 및 수정 기능 개선하기
 
-https://wikidocs.net/edit/page/267753
+https://wikidocs.net/267753
