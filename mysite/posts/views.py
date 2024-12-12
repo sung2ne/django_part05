@@ -1,5 +1,8 @@
 import os
 import uuid
+from urllib.parse import quote
+
+from django.http import HttpResponse
 from mysite import settings
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
@@ -22,11 +25,17 @@ def posts_create(request):
             post.password = make_password(form.cleaned_data['password'])
             post.save()
             
-            if request.FILES['uploadFile']:
+            # 파일 업로드
+            if request.FILES.get('uploadFile'):
                 filename = uuid.uuid4().hex
-                file = request.FILES['uploadFile']
+                file = request.FILES.get('uploadFile')
                 
+                # 파일 저장 경로
                 file_path = os.path.join(settings.MEDIA_ROOT, 'posts', str(post.id), str(filename))
+                if not os.path.exists(os.path.dirname(file_path)):
+                    os.makedirs(os.path.dirname(file_path))
+                
+                # 파일 저장
                 with open(file_path, 'wb') as f:
                     for chunk in file.chunks():
                         f.write(chunk)
@@ -50,16 +59,55 @@ def posts_read(request, post_id):
 # 게시글 수정
 def posts_update(request, post_id):
     post = get_object_or_404(Posts, id=post_id)    
+    post_password = post.password
     form = PostUpdateForm(instance=post)
     
     if request.method == 'POST':
         form = PostUpdateForm(request.POST)
         
         if form.is_valid():
-            if check_password(form.cleaned_data['password'], post.password):
+            if check_password(form.cleaned_data['password'], post_password):
                 post = form.save(commit=False)
                 post.password = make_password(form.cleaned_data['password'])
                 post.save()
+                
+                # 파일 삭제
+                if request.POST.get('deleteFile'):
+                    if post.filename:
+                        # 파일 삭제
+                        file_path = os.path.join(settings.MEDIA_ROOT, 'posts', str(post.id), str(post.filename))    
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+                        
+                        post.filename = None
+                        post.original_filename = None
+                        post.save()
+
+                # 파일 업로드
+                if request.FILES.get('uploadFile'):
+                    if post.filename:
+                        # 파일 삭제
+                        file_path = os.path.join(settings.MEDIA_ROOT, 'posts', str(post.id), str(post.filename))    
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+                        
+                    filename = uuid.uuid4().hex
+                    file = request.FILES.get('uploadFile')
+                    
+                    # 파일 저장 경로
+                    file_path = os.path.join(settings.MEDIA_ROOT, 'posts', str(post.id), str(filename))
+                    if not os.path.exists(os.path.dirname(file_path)):
+                        os.makedirs(os.path.dirname(file_path))
+                    
+                    # 파일 저장
+                    with open(file_path, 'wb') as f:
+                        for chunk in file.chunks():
+                            f.write(chunk)
+                            
+                    post.filename = filename
+                    post.original_filename = file.name
+                    post.save()
+                    
                 messages.success(request, '게시글이 수정되었습니다.')
                 return redirect('posts:read', post_id=post.id)
             else:
@@ -76,6 +124,12 @@ def posts_delete(request, post_id):
     
     if request.method == 'POST':
         if check_password(password, post.password):
+            # 파일 삭제
+            if post.filename:
+                file_path = os.path.join(settings.MEDIA_ROOT, 'posts', str(post.id), str(post.filename))    
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            
             post.delete()
             messages.success(request, '게시글이 삭제되었습니다.')
             return redirect('posts:list')
@@ -127,3 +181,17 @@ def posts_list(request):
         'searchType': searchType,
         'searchKeyword': searchKeyword
     })
+    
+# 첨부 파일 다운로드
+def posts_download(request, post_id):
+    post = get_object_or_404(Posts, id=post_id)
+    file_path = os.path.join(settings.MEDIA_ROOT, 'posts', str(post.id), str(post.filename))
+    
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='application/octet-stream')
+            encoded_filename = quote(post.original_filename)
+            response['Content-Disposition'] = f'attachment; filename*=UTF-8\'\'{encoded_filename}'
+            return response
+    
+    return HttpResponse(status=404)

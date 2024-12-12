@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-12">
         <!-- 게시글 수정 -->
-        <form id="updateForm" method="POST">
+        <form id="updateForm" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="card mb-3">
                 <div class="card-header">
@@ -38,7 +38,7 @@
                         </div>
                         {% endif %}
                     </div>
-                    <div>
+                    <div class="mb-3">
                         <label for="password" class="form-label">비밀번호 <span class="text-danger">*</span></label>
                         <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호를 입력하세요.">
                         {% if form.password.errors %}
@@ -47,11 +47,28 @@
                         </div>
                         {% endif %}
                     </div>
+                    {% if form.instance.filename %}
+                    <div class="mb-3">
+                        <div class="mb-2">  
+                            <span>기존 파일: <a href="{% url 'posts:download' form.instance.id %}">{{ form.instance.original_filename }}</a></span>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="deleteFile" id="deleteFile" value="false">
+                            <label class="form-check-label text-danger" for="deleteFile">
+                                파일 삭제
+                            </label>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <label for="uploadFile" class="form-label">첨부 파일</label>
+                        <input type="file" class="form-control" id="uploadFile" name="uploadFile" accept="image/*">
+                    </div>
                 </div>
             </div>
             <div>
                 <button type="submit" class="btn btn-primary">수정</button>
-                <a href="{% url 'posts:read' post_id=form.instance.id %}" class="btn btn-secondary">취소</a>
+                
             </div>
         </form>
         <!--// 게시글 수정 -->

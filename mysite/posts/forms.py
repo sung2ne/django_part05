@@ -85,7 +85,7 @@ class PostUpdateForm(forms.ModelForm):
     def clean_password(self):
         password = self.cleaned_data['password']
         if not password:
-            raise forms.ValidationError("비밀번호를 입력해주��요.")
+            raise forms.ValidationError("비밀번호를 입력해주세요.")
         if len(password) < 4:
             raise forms.ValidationError("비밀번호는 최소 4자 이상 입력해주세요.")
         if len(password) > 20:
