@@ -1,0 +1,42 @@
+{% extends "../base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4 mx-auto">
+        <!-- 프로필 -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="card-title">프로필</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">아이디</span>
+                        {{ user.username }}
+                    </div>
+                </p>
+                <hr>
+                <p class="card-text">
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">이름</span>
+                        {{ user.first_name }}
+                    </div>
+                </p>
+                <hr>
+                <p class="card-text">
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">이메일</span>
+                        {{ user.email }}
+                    </div>
+                </p>
+            </div>
+        </div>
+        <!--// 프로필 -->
+        <div class="text-center">
+            <a href="{% url 'auth:update_profile' %}" class="btn btn-success mx-2">프로필 수정</a>
+            <a href="{% url 'auth:update_password' %}" class="btn btn-warning mx-2">비밀번호 변경</a>
+            <a href="{% url 'auth:withdraw' %}" class="btn btn-danger mx-2">회원탈퇴</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

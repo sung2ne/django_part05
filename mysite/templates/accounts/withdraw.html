@@ -1,0 +1,109 @@
+{% extends "../base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4 mx-auto">
+        <!-- 회원탈퇴 -->
+        <form id="withdrawForm" method="POST">
+            {% csrf_token %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <span class="text-danger">*</span> 표시는 필수항목입니다.
+                </div>
+                <div class="card-body">     
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">이름 <span class="text-danger">*</span></label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="이름을 입력하세요." value="{{ form.first_name.value|default_if_none:'' }}">
+                        {% if form.first_name.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.first_name.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">이메일 <span class="text-danger">*</span></label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="이메일을 입력하세요." value="{{ form.email.value|default_if_none:'' }}">
+                        {% if form.email.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.email.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">아이디 <span class="text-danger">*</span></label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="아이디를 입력하세요." value="{{ form.username.value|default_if_none:'' }}">
+                        {% if form.username.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.username.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호를 입력하세요.">
+                        {% if form.password.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.password.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>                
+            </div>
+            <div>
+                <button type="submit" class="btn btn-danger">회원탈퇴</button>
+                <a href="{% url 'auth:profile' %}" class="btn btn-secondary">탈퇴취소</a>
+            </div>
+        </form>
+        <!--// 회원탈퇴 -->
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        // 회원탈퇴 폼 검증
+        $('#withdrawForm').validate({
+            rules: {
+                first_name: {
+                    required: true,
+                },
+                email: {
+                    required: true,
+                    email: true,
+                },
+                username: {
+                    required: true,
+                },
+                password: {
+                    required: true,
+                }
+            },
+            messages: {
+                first_name: {
+                    required: '이름을 입력하세요.',
+                },
+                email: {
+                    required: '이메일을 입력하세요.',
+                    email: '이메일 형식이 올바르지 않습니다.'
+                },
+                username: {
+                    required: '아이디를 입력하세요.',
+                },
+                password: {
+                    required: '비밀번호를 입력하세요.',
+                }
+            },
+            errorClass: 'is-invalid',
+            validClass: 'is-valid',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.mb-3').append(error);
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

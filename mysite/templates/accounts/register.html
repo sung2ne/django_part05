@@ -1,0 +1,138 @@
+{% extends "../base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4 mx-auto">
+        <!-- 회원가입 -->
+        <form id="registerForm" method="POST">
+            {% csrf_token %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <span class="text-danger">*</span> 표시는 필수항목입니다.
+                </div>
+                <div class="card-body">     
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">이름 <span class="text-danger">*</span></label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="이름을 입력하세요." value="{{ form.first_name.value|default_if_none:'' }}">
+                        {% if form.first_name.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.first_name.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">이메일 <span class="text-danger">*</span></label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="이메일을 입력하세요." value="{{ form.email.value|default_if_none:'' }}">
+                        {% if form.email.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.email.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>       
+                    <div class="mb-3">
+                        <label for="username" class="form-label">아이디 <span class="text-danger">*</span></label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="아이디를 입력하세요." value="{{ form.username.value|default_if_none:'' }}">
+                        {% if form.username.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.username.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="password1" class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                        <input type="password" id="password1" name="password1" class="form-control" placeholder="비밀번호를 입력하세요.">
+                        {% if form.password1.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.password1.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="password2" class="form-label">비밀번호 확인 <span class="text-danger">*</span></label>
+                        <input type="password" id="password2" name="password2" class="form-control" placeholder="비밀번호를 다시 입력하세요.">
+                        {% if form.password2.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.password2.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>                
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">회원가입</button>
+                <a href="{% url 'auth:login' %}" class="btn btn-secondary">가입취소</a>
+            </div>
+        </form>
+        <!--// 회원가입 -->
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        // 회원가입 폼 검증
+        $('#registerForm').validate({
+            rules: {
+                first_name: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 4
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                username: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20
+                },
+                password1: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 50
+                },
+                password2: {
+                    required: true,
+                    equalTo: "#password1"
+                }
+            },
+            messages: {
+                first_name: {
+                    required: '이름을 입력하세요.',
+                    minlength: '이름은 최소 2자 이상 입력하세요.',
+                    maxlength: '이름은 최대 4자 이하로 입력하세요.'
+                },
+                email: {
+                    required: '이메일을 입력하세요.',
+                    email: '이메일 형식이 올바르지 않습니다.'
+                },
+                username: {
+                    required: '아이디를 입력하세요.',
+                    minlength: '아이디는 최소 6자 이상 입력하세요.',
+                    maxlength: '아이디는 최대 20자 이하로 입력하세요.'
+                },
+                password1: {
+                    required: '비밀번호를 입력하세요.',
+                    minlength: '비밀번호는 최소 8자 이상 입력하세요.',
+                    maxlength: '비밀번호는 최대 50자 이하로 입력하세요.'
+                },
+                password2: {
+                    required: '비밀번호를 다시 입력하세요.',
+                    equalTo: '비밀번호와 비밀번호 확인이 일치하지 않습니다.'
+                }
+            },
+            errorClass: 'is-invalid',
+            validClass: 'is-valid',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.mb-3').append(error);
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

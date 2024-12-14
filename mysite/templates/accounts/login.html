@@ -1,0 +1,78 @@
+{% extends "../base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4 mx-auto">
+        <!-- 로그인 -->
+        <form id="loginForm" method="POST">
+            {% csrf_token %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">아이디 <span class="text-danger">*</span></label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="아이디를 입력하세요." value="{{ form.username.value|default_if_none:'' }}">
+                        {% if form.username.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.username.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호를 입력하세요.">
+                        {% if form.password.errors %}
+                        <div class="form-text text-danger">
+                            {{ form.password.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">로그인</button>
+                    </div>
+                </div>                
+            </div>
+            <div class="text-center">
+                <a href="{% url 'auth:register' %}" class="btn btn-success mx-2">회원가입</a>
+                <a href="{% url 'auth:find_username' %}" class="btn btn-warning mx-2">아이디 찾기</a>
+                <a href="{% url 'auth:reset_password' %}" class="btn btn-danger mx-2">비밀번호 초기화</a>
+            </div>
+        </form>
+        <!--// 로그인 -->
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        // 로그인 폼 검증
+        $('#loginForm').validate({
+            rules: {
+                username: {
+                    required: true,
+                },
+                password: {
+                    required: true,
+                },
+            },
+            messages: {
+                username: {
+                    required: '아이디를 입력하세요.',
+                },
+                password: {
+                    required: '비밀번호를 입력하세요.',
+                },
+            },
+            errorClass: 'is-invalid',
+            validClass: 'is-valid',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.mb-3').append(error);
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}
