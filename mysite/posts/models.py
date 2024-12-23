@@ -1,7 +1,7 @@
 from django.db import models
 
+# 게시글 모델
 class Posts(models.Model):
-    # 게시글 정보
     title = models.CharField(verbose_name="제목", max_length=100)
     content = models.TextField(verbose_name="내용")
     password = models.CharField(verbose_name="비밀번호", max_length=100)
