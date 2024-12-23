@@ -5,9 +5,9 @@ app_name = 'posts'
 
 urlpatterns = [
     path('create/', views.posts_create, name='create'),
-    path('read/<int:post_id>/', views.posts_read, name='read'),
-    path('update/<int:post_id>/', views.posts_update, name='update'),
-    path('delete/<int:post_id>/', views.posts_delete, name='delete'),
+    path('<int:post_id>/', views.posts_read, name='read'),
+    path('<int:post_id>/update/', views.posts_update, name='update'),
+    path('<int:post_id>/delete/', views.posts_delete, name='delete'),
     path('', views.posts_list, name='list'),
-    path('download/<int:post_id>/', views.posts_download, name='download'),
+    path('<int:post_id>/download/', views.posts_download, name='download'),
 ]
