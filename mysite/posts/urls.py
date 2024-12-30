@@ -4,10 +4,10 @@ from . import views
 app_name = 'posts'
 
 urlpatterns = [
-    path('create/', views.posts_create, name='create'),
-    path('<int:post_id>/', views.posts_read, name='read'),
-    path('<int:post_id>/update/', views.posts_update, name='update'),
-    path('<int:post_id>/delete/', views.posts_delete, name='delete'),
-    path('', views.posts_list, name='list'),
+    path('create/', views.create_post, name='create'),
+    path('<int:post_id>/', views.get_post, name='read'),
+    path('<int:post_id>/update/', views.update_post, name='update'),
+    path('<int:post_id>/delete/', views.delete_post, name='delete'),
+    path('', views.get_posts, name='list'),
     path('<int:post_id>/download/', views.posts_download, name='download'),
 ]
