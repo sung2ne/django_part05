@@ -29,7 +29,7 @@ def accounts_register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 # 로그인
-def accounts_login(request):
+def login_account(request):
     form = LoginForm()
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -52,12 +52,12 @@ def accounts_login(request):
     return render(request, 'accounts/login.html', {'form': form, 'message_class': 'col-4 mx-auto'})
 
 # 로그아웃
-def accounts_logout(request):
+def logout_account(request):
     logout(request)
     return redirect('auth:login')
 
 # 프로필 보기
-def accounts_profile(request):
+def get_profile(request):
     return render(request, 'accounts/profile.html', {'message_class': 'col-4 mx-auto'})
 
 # 프로필 수정
