@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
 
-from .forms import FindUsernameForm, LoginForm, RegisterForm, ResetPasswordForm, UpdatePasswordForm, UpdateProfileForm, WithdrawForm
+from .forms import UsernameFindForm, LoginForm, RegisterForm, PasswordResetForm, PasswordUpdateForm, ProfileUpdateForm, WithdrawForm
 
 # 회원가입
 def accounts_register(request):
@@ -62,10 +62,10 @@ def get_profile(request):
 
 # 프로필 수정
 def update_profile(request):
-    form = UpdateProfileForm(instance=request.user)
+    form = ProfileUpdateForm(instance=request.user)
     
     if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, instance=request.user)
+        form = ProfileUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
@@ -79,10 +79,10 @@ def update_profile(request):
 
 # 비밀번호 수정
 def update_password(request):
-    form = UpdatePasswordForm()
+    form = PasswordUpdateForm()
     
     if request.method == 'POST':
-        form = UpdatePasswordForm(request.POST)
+        form = PasswordUpdateForm(request.POST)
         if form.is_valid():
             password = form.cleaned_data['password']
             password1 = form.cleaned_data['password1']
@@ -105,10 +105,10 @@ def update_password(request):
 
 # 아이디 찾기
 def find_username(request):
-    form = FindUsernameForm()
+    form = UsernameFindForm()
     
     if request.method == 'POST':
-        form = FindUsernameForm(request.POST)
+        form = UsernameFindForm(request.POST)
         if form.is_valid():
             first_name = form.cleaned_data['first_name']
             email = form.cleaned_data['email']
@@ -125,10 +125,10 @@ def find_username(request):
 
 # 비밀번호 초기화
 def reset_password(request):
-    form = ResetPasswordForm()
+    form = PasswordResetForm()
     
     if request.method == 'POST':
-        form = ResetPasswordForm(request.POST)
+        form = PasswordResetForm(request.POST)
         if form.is_valid():
             first_name = form.cleaned_data['first_name']
             email = form.cleaned_data['email']

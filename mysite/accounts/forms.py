@@ -98,7 +98,7 @@ class LoginForm(forms.Form):
         return password
 
 # 프로필 수정 폼
-class UpdateProfileForm(forms.ModelForm):
+class ProfileUpdateForm(forms.ModelForm):
     first_name = forms.CharField(required=False)
     email = forms.EmailField(required=False)
     
@@ -130,7 +130,7 @@ class UpdateProfileForm(forms.ModelForm):
         return email
     
 # 비밀번호 수정 폼
-class UpdatePasswordForm(forms.Form):
+class PasswordUpdateForm(forms.Form):
     password = forms.CharField(required=False)
     password1 = forms.CharField(required=False)
     password2 = forms.CharField(required=False)
@@ -174,7 +174,7 @@ class UpdatePasswordForm(forms.Form):
         return password2
     
 # 아이디 찾기 폼
-class FindUsernameForm(forms.Form):
+class UsernameFindForm(forms.Form):
     first_name = forms.CharField(required=False)
     email = forms.EmailField(required=False)
     
@@ -195,7 +195,7 @@ class FindUsernameForm(forms.Form):
         return email
     
 # 비밀번호 초기화 폼
-class ResetPasswordForm(forms.Form):
+class PasswordResetForm(forms.Form):
     first_name = forms.CharField(required=False)
     username = forms.CharField(required=False)
     email = forms.EmailField(required=False)
